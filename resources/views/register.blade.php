@@ -239,8 +239,8 @@
                             </div>
                         </div>
 
-                        <a href="#" class="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-primary hover:shadow-lg transition-all">
-                            Go to Login
+                        <a href="{{ route('landing') }}" class="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-primary hover:shadow-lg transition-all">
+                            Go to Home
                         </a>
                     </div>
 
