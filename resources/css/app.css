@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* In Tailwind v4, we define theme variables directly in CSS.
+  This replaces the old tailwind.config.js and the HTML script tag.
+*/
+@theme {
+    /* Fonts */
+    --font-sans: "Inter", sans-serif;
+    --font-serif: "Libre Baskerville", serif;
+
+    /* Colors */
+    --color-border: #e2e8f0; /* slate-200 */
+    
+    --color-primary: #1e3a8a; /* Blue-900 */
+    --color-primary-foreground: #ffffff;
+    --color-primary-95: #1e3a8af2; /* Custom opacity handling */
+    
+    --color-accent: #fbbf24; /* Amber-400 */
+    --color-accent-foreground: #000000;
+}
+
+/* Utility layer for custom classes 
+   This replaces your <style> block 
+*/
+@utility glass-card {
+    background-color: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
