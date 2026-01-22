@@ -11,8 +11,8 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         tailwind.config = {
             theme: {
@@ -281,25 +281,38 @@
             },
 
             nextStep() {
+                // --- STEP 1: INITIAL VALIDATION ---
                 if (this.step === 1) {
-                    // Simple frontend validation
+                    // We check if fields are empty BEFORE sending to server
                     if(!this.formData.name || !this.formData.email || !this.formData.phone) {
-                        alert("Please fill in all fields.");
-                        return;
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Missing Details',
+                            text: 'Please fill in all required fields to proceed.',
+                            confirmButtonColor: '#1e3a8a'
+                        });
+                        return; // Stop here if invalid
                     }
+                    // If valid, choose the next step based on Plan Type
                     this.step = (this.plan === 'free') ? 3 : 2;
                 } 
+                
+                // --- STEP 2: PAYMENT (Full Access Only) ---
                 else if (this.step === 2) {
                     this.step = 3;
                 } 
+                
+                // --- STEP 3: SUBMIT TO SERVER ---
                 else if (this.step === 3) {
-                    // --- SEND DATA TO LARAVEL HERE ---
                     const btn = document.activeElement;
                     const originalText = btn.innerText;
+
+                    // 1. Show Loading State (Spinner)
                     btn.innerHTML = `<i data-lucide='loader-2' class='animate-spin w-5 h-5 inline'></i> Processing...`;
                     lucide.createIcons();
+                    btn.disabled = true; // Prevent double-clicking
 
-                    // Prepare payload
+                    // 2. Prepare Data
                     let payload = {
                         name: this.formData.name,
                         email: this.formData.email,
@@ -308,31 +321,56 @@
                         payment_reference: this.formData.refNumber
                     };
 
+                    // 3. Send Request to Laravel
                     fetch("{{ route('register.store') }}", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             "Accept": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}" // Essential for security
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}" // Security Token
                         },
                         body: JSON.stringify(payload)
                     })
                     .then(async response => {
                         const data = await response.json();
+                        
+                        // 4. Handle SUCCESS
                         if (response.ok) {
-                            // Success! Move to Step 4
-                            this.step = 4;
+                            this.step = 4; // Move to "Thank You" screen
                             this.$nextTick(() => lucide.createIcons());
-                        } else {
-                            // Validation Error (e.g. Email taken)
-                            alert(data.message || "Please check your inputs.");
-                            btn.innerText = originalText;
+                            
+                            // Optional: Small popup toast
+                            Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            }).fire({ icon: 'success', title: 'Registration Successful' });
+                        } 
+                        // 5. Handle ERROR (e.g., Email already taken)
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Registration Failed',
+                                text: data.message || "Please check your inputs.",
+                                confirmButtonColor: '#1e3a8a'
+                            });
+                            // Reset button
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
                         }
                     })
                     .catch(error => {
+                        // 6. Handle SYSTEM CRASH (Network error, etc.)
                         console.error('Error:', error);
-                        alert("System error. Please try again.");
-                        btn.innerText = originalText;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'System Error',
+                            text: 'Something went wrong. Please try again later.',
+                            confirmButtonColor: '#1e3a8a'
+                        });
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
                     });
                 }
             }

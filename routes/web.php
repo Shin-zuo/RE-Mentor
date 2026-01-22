@@ -6,6 +6,9 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrolleesController;
+use App\Services\GoogleClassroomService;
+use Illuminate\Http\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -53,4 +56,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/enrollees', [EnrolleesController::class, 'index'])->name('enrollees');
     Route::post('/enrollees/{id}/approve', [EnrolleesController::class, 'approve'])->name('enrollees.approve');
 
+});
+
+
+
+// 2. Where Google sends you back
+Route::get('/google/callback', function (Request $request) {
+    if (!$request->has('code')) {
+        return 'Error: No code returned';
+    }
+    
+    $google = new GoogleClassroomService();
+    $google->authenticate($request->get('code'));
+    
+    return 'Success! Google Classroom is now connected. You can close this tab.';
 });

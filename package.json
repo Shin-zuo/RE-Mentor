@@ -18,6 +18,7 @@
         "@fontsource/inter": "^5.2.8",
         "@fontsource/libre-baskerville": "^5.2.10",
         "alpinejs": "^3.15.4",
-        "lucide": "^0.562.0"
+        "lucide": "^0.562.0",
+        "sweetalert2": "^11.26.17"
     }
 }
