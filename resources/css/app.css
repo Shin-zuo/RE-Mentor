@@ -1,29 +1,25 @@
 @import "tailwindcss";
 
-/* In Tailwind v4, we define theme variables directly in CSS.
-  This replaces the old tailwind.config.js and the HTML script tag.
-*/
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
-    /* Fonts */
+    /* ... keep your existing font and color definitions here ... */
     --font-sans: "Inter", sans-serif;
     --font-serif: "Libre Baskerville", serif;
 
-    /* Colors */
-    --color-border: #e2e8f0; /* slate-200 */
-    
-    --color-primary: #1e3a8a; /* Blue-900 */
+    --color-primary: #1e3a8a;
     --color-primary-foreground: #ffffff;
-    --color-primary-95: #1e3a8af2; /* Custom opacity handling */
+    --color-primary-95: #1e3a8af2;
     
-    --color-accent: #fbbf24; /* Amber-400 */
+    --color-accent: #fbbf24;
     --color-accent-foreground: #000000;
+    
+    /* Add standard border color for consistency */
+    --color-border: #e2e8f0; 
 }
 
-/* Utility layer for custom classes 
-   This replaces your <style> block 
-*/
+/* Glass effect that adapts to dark mode */
 @utility glass-card {
-    background-color: rgba(255, 255, 255, 0.90);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    @apply bg-white/90 backdrop-blur-md border border-slate-200/50;
+    @apply dark:bg-slate-900/90 dark:border-slate-700/50;
 }

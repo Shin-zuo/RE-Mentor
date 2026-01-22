@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Join RE-MENTOR | QR Payment</title>
+    <title>Join RE-MENTOR | Register</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,9 +23,6 @@
                         'primary-95': '#172554',
                         accent: '#eab308', 
                         'accent-foreground': '#422006',
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
@@ -33,20 +30,6 @@
     </script>
     <style>
         [x-cloak] { display: none !important; }
-        .qr-scanner-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: #ef4444;
-            box-shadow: 0 0 4px #ef4444;
-            animation: scan 2s linear infinite;
-        }
-        @keyframes scan {
-            0% { top: 0; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
     </style>
 </head>
 <body class="font-sans antialiased text-slate-900 bg-slate-50 min-h-screen flex flex-col">
@@ -71,13 +54,13 @@
 
         <div class="w-full max-w-2xl">
             
-            <div class="mb-8 max-w-lg mx-auto">
+            <div class="mb-8 max-w-xl mx-auto">
                 <div class="flex items-center justify-between relative">
                     <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 -z-10 rounded-full"></div>
                     <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary -z-10 rounded-full transition-all duration-500"
                          :style="'width: ' + progressWidth + '%'"></div>
 
-                    <template x-for="(label, index) in ['Account', 'Payment', 'Scan QR', 'Done']">
+                    <template x-for="(label, index) in ['Account', 'Payment', 'Review', 'Finish']">
                         <div class="flex flex-col items-center gap-2 bg-slate-50 px-2 z-10">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border-2 transition-all duration-300"
                                  :class="(step > index + 1) ? 'bg-primary border-primary text-white' : (step === index + 1 ? 'border-primary text-primary bg-white' : 'border-slate-300 text-slate-300 bg-white')">
@@ -93,7 +76,8 @@
 
             <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden relative min-h-[550px]">
                 
-                <form action="#" onsubmit="event.preventDefault();" class="h-full relative">
+                <form action="{{ route('register.store') }}" onsubmit="event.preventDefault();" class="h-full relative">
+                    @csrf
                     
                     <div x-show="step === 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-x-10" x-transition:enter-end="opacity-100 translate-x-0" class="p-8 md:p-10">
                         <h2 class="font-serif text-2xl font-bold text-slate-900 mb-6">Create your account</h2>
@@ -120,127 +104,156 @@
                         <div class="space-y-4">
                             <input type="text" x-model="formData.name" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-primary outline-none" placeholder="Full Name">
                             <input type="email" x-model="formData.email" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-primary outline-none" placeholder="Google Email Address">
-                            <input type="text" inputmode="numeric" placeholder="Contact Number" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-primary outline-none" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11"/>
+                            <input type="text" x-model="formData.phone" inputmode="numeric" placeholder="Contact Number" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-primary outline-none" maxlength="11"/>
                         </div>
 
                         <div class="mt-8 flex justify-end">
                             <button type="button" @click="nextStep()" class="bg-primary text-white px-8 py-3 rounded-full font-bold hover:bg-primary-95 transition-all flex items-center gap-2">
-                                <span x-text="plan === 'free' ? 'Register Now' : 'Select Payment'"></span>
+                                <span x-text="plan === 'free' ? 'Review Details' : 'Proceed to Payment'"></span>
                                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div x-show="step === 2" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-10" x-transition:enter-end="opacity-100 translate-x-0" class="p-8 md:p-10">
-                        <div class="flex items-center gap-3 mb-6">
+                    <div x-show="step === 2" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-10" x-transition:enter-end="opacity-100 translate-x-0" class="p-8 md:p-10 flex flex-col h-full">
+                        <div class="flex items-center gap-3 mb-4">
                             <button type="button" @click="step = 1" class="p-2 hover:bg-slate-100 rounded-full transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-slate-500"></i></button>
-                            <h2 class="font-serif text-2xl font-bold text-slate-900">Choose Provider</h2>
+                            <h2 class="font-serif text-2xl font-bold text-slate-900">Scan to Pay</h2>
                         </div>
 
-                        <p class="text-slate-500 mb-6">Select how you want to pay the ₱4,000 fee.</p>
-
-                        <div class="space-y-3 mb-8">
-                            <label class="flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all"
-                                   :class="paymentMethod === 'gcash' ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment" value="gcash" x-model="paymentMethod" class="w-4 h-4 text-blue-600">
-                                    <span class="font-bold text-slate-700">GCash</span>
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="bg-blue-600 p-6 rounded-2xl shadow-xl w-full max-w-xs text-center text-white mb-6">
+                                <div class="text-sm font-bold opacity-90 mb-4 tracking-wider uppercase">GCash Payment</div>
+                                <div class="bg-white p-2 rounded-xl mb-4">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=09171234567" 
+                                         class="w-full h-auto rounded-lg" alt="GCash QR">
                                 </div>
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/52/GCash_logo.svg" class="h-6 w-auto object-contain">
-                            </label>
-
-                            <label class="flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all"
-                                   :class="paymentMethod === 'maya' ? 'border-green-500 bg-green-50' : 'border-slate-200 hover:border-slate-300'">
-                                <div class="flex items-center gap-3">
-                                    <input type="radio" name="payment" value="maya" x-model="paymentMethod" class="w-4 h-4 text-green-600">
-                                    <span class="font-bold text-slate-700">Maya</span>
+                                <div class="flex justify-between items-center text-sm border-t border-blue-500 pt-3">
+                                    <span class="opacity-80">Amount Due:</span>
+                                    <span class="font-bold text-xl">₱4,000.00</span>
                                 </div>
-                                <span class="font-black text-green-600 italic tracking-tighter">maya</span>
-                            </label>
+                            </div>
 
-                             <label class="flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all"
-                                    :class="paymentMethod === 'qrph' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-200 hover:border-slate-300'">
-                                 <div class="flex items-center gap-3">
-                                     <input type="radio" name="payment" value="qrph" x-model="paymentMethod" class="w-4 h-4 text-indigo-600">
-                                     <span class="font-bold text-slate-700">QR Ph</span>
-                                 </div>
-                                 <i data-lucide="qr-code" class="h-6 w-6 text-indigo-600"></i>
-                             </label>
+                            <div class="w-full max-w-xs space-y-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">GCash Reference No.</label>
+                                    <input type="text" x-model="formData.refNumber" 
+                                           class="w-full px-4 py-3 rounded-lg border-2 border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-50 outline-none transition-all font-mono text-center text-lg placeholder:text-slate-300 placeholder:text-sm" 
+                                           placeholder="e.g. 10023456789" maxlength="13">
+                                </div>
+
+                                <button type="button" @click="nextStep()" 
+                                        :disabled="!formData.refNumber || formData.refNumber.length < 8"
+                                        class="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex justify-center items-center gap-2">
+                                    Verify & Review <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
                         </div>
-
-                        <button type="button" @click="nextStep()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
-                            <i data-lucide="qr-code" class="w-4 h-4"></i>
-                            Generate QR Code
-                        </button>
                     </div>
 
-                    <div x-show="step === 3" x-cloak class="p-8 md:p-10 flex flex-col items-center justify-center h-full">
-                        <h2 class="font-serif text-xl font-bold text-slate-900 mb-2">Scan to Pay</h2>
-                        <div class="text-sm text-slate-500 mb-6 flex items-center gap-2">
-                            Amount to pay: <span class="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">₱4,000.00</span>
+                    <div x-show="step === 3" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-10" x-transition:enter-end="opacity-100 translate-x-0" class="p-8 md:p-10">
+                        <div class="flex items-center gap-3 mb-6">
+                            <button type="button" @click="step = (plan === 'free' ? 1 : 2)" class="p-2 hover:bg-slate-100 rounded-full transition-colors"><i data-lucide="arrow-left" class="w-5 h-5 text-slate-500"></i></button>
+                            <h2 class="font-serif text-2xl font-bold text-slate-900">Review Registration</h2>
                         </div>
 
-                        <div class="relative bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-inner mb-6 group">
-                            <img :src="`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PAY-REMENTOR-${paymentMethod}-4000`" 
-                                 class="w-48 h-48 mix-blend-multiply opacity-90" alt="QR Code">
-                            
-                            <div class="absolute inset-4 overflow-hidden rounded-lg pointer-events-none">
-                                <div class="qr-scanner-line"></div>
+                        <div class="space-y-6">
+                            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+                                <h3 class="text-xs font-bold text-slate-500 uppercase mb-3 tracking-wider">Plan Selected</h3>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="font-bold text-slate-900 text-lg" x-text="plan === 'free' ? 'Free Trial' : 'Full Access'"></div>
+                                        <div class="text-sm text-slate-500" x-text="plan === 'free' ? '15 Days Access' : 'Valid for 2026 Season'"></div>
+                                    </div>
+                                    <div class="text-xl font-serif font-bold text-primary" x-text="plan === 'free' ? '₱0.00' : '₱4,000.00'"></div>
+                                </div>
                             </div>
 
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div class="bg-white p-2 rounded-full shadow-md">
-                                    <i x-show="paymentMethod === 'qrph'" data-lucide="qr-code" class="w-6 h-6 text-slate-900"></i>
-                                    <span x-show="paymentMethod === 'gcash'" class="text-xs font-bold text-blue-600">GCASH</span>
-                                    <span x-show="paymentMethod === 'maya'" class="text-xs font-bold text-green-600">MAYA</span>
+                            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+                                <p>@error('email') <span class="text-xs text-red-500 font-bold mb-4 block">{{ $message }} </span> @enderror</p>
+
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Account Information</h3>
+                                    <button @click="step = 1" class="text-xs font-bold text-primary hover:underline">Edit</button>
+                                </div>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i data-lucide="user" class="w-4 h-4"></i></div>
+                                        <div>
+                                            <div class="text-slate-500 text-xs">Full Name</div>
+                                            <div class="font-medium text-slate-800" x-text="formData.name || '-'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i data-lucide="mail" class="w-4 h-4"></i></div>
+                                        <div>
+                                            <div class="text-slate-500 text-xs">Email Address</div>
+                                            <div class="font-medium text-slate-800" x-text="formData.email || '-'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i data-lucide="phone" class="w-4 h-4"></i></div>
+                                        <div>
+                                            <div class="text-slate-500 text-xs">Phone Number</div>
+                                            <div class="font-medium text-slate-800" x-text="formData.phone || '-'"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div x-show="plan === 'full'" class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-xs font-bold text-blue-800 uppercase tracking-wider">Payment Reference</h3>
+                                    <button @click="step = 2" class="text-xs font-bold text-blue-600 hover:underline">Edit</button>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="receipt" class="w-5 h-5 text-blue-600"></i>
+                                    <span class="font-mono font-bold text-lg text-blue-900" x-text="formData.refNumber"></span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex flex-col items-center space-y-3">
-                            <div class="flex items-center gap-2 text-primary font-medium animate-pulse">
-                                <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
-                                <span>Waiting for confirmation...</span>
-                            </div>
-                            <p class="text-xs text-slate-400 text-center max-w-xs">
-                                Please do not close this window. We will automatically detect your payment once completed.
-                            </p>
+                        <div class="mt-8">
+                            <button type="button" @click="nextStep()" class="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                                Confirm & Submit Application
+                            </button>
+                            <p class="text-center text-xs text-slate-400 mt-4">By clicking confirm, you certify that the information provided is accurate.</p>
                         </div>
-
-                        <button @click="step = 2" class="mt-8 text-xs text-slate-400 hover:text-red-500 underline">
-                            Cancel Transaction
-                        </button>
                     </div>
 
                     <div x-show="step === 4" x-cloak x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="p-10 text-center flex flex-col items-center justify-center h-full min-h-[400px]">
                         
-                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-green-200 shadow-lg">
-                            <i data-lucide="check-check" class="w-10 h-10 text-green-600"></i>
+                        <div x-show="plan === 'free'">
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-green-200 shadow-lg mx-auto">
+                                <i data-lucide="check-check" class="w-10 h-10 text-green-600"></i>
+                            </div>
+                            <h2 class="font-serif text-3xl font-bold text-slate-900 mb-2">Registration Complete!</h2>
+                            <p class="text-slate-500 mb-8">Your free trial has started. Check your email.</p>
                         </div>
-                        
-                        <h2 class="font-serif text-3xl font-bold text-slate-900 mb-2">Payment Received!</h2>
-                        <p class="text-slate-500 max-w-sm mx-auto mb-8">
-                            Thank you, <span x-text="formData.name" class="font-bold"></span>. <br>
-                            We have verified your transaction.
-                        </p>
 
-                        <div class="bg-white p-6 rounded-2xl w-full max-w-sm border border-slate-200 shadow-lg mb-8 relative overflow-hidden group hover:border-primary/50 transition-colors">
-                            <div class="absolute top-0 left-0 w-1.5 h-full bg-green-500"></div>
-                            <div class="flex items-center gap-4 text-left">
-                                <div class="bg-slate-100 p-3 rounded-lg group-hover:bg-primary/10 transition-colors">
-                                    <i data-lucide="graduation-cap" class="text-primary h-6 w-6"></i>
-                                </div>
+                        <div x-show="plan === 'full'">
+                            <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mb-6 shadow-amber-200 shadow-lg mx-auto animate-pulse-slow">
+                                <i data-lucide="hourglass" class="w-10 h-10 text-amber-600"></i>
+                            </div>
+                            
+                            <h2 class="font-serif text-3xl font-bold text-slate-900 mb-2">Submitted for Review</h2>
+                            <p class="text-slate-500 max-w-sm mx-auto mb-8 text-lg">
+                                We have received your application and payment reference.
+                            </p>
+
+                            <div class="bg-amber-50 p-6 rounded-2xl w-full max-w-sm border border-amber-200 mb-8 text-left flex gap-4">
+                                <i data-lucide="info" class="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5"></i>
                                 <div>
-                                    <div class="font-bold text-slate-800">Review Access Granted</div>
-                                    <div class="text-xs text-slate-500 mt-1">
-                                        Invitation sent to <span x-text="formData.email" class="font-medium text-slate-700"></span>
-                                    </div>
+                                    <h4 class="font-bold text-amber-900 text-sm mb-1">Validation in Progress</h4>
+                                    <p class="text-xs text-amber-800 leading-relaxed">
+                                        Please allow <strong>1 business day</strong> for us to verify your payment. Once confirmed, you will automatically receive the Google Classroom invite.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        <a href="{{ route('landing') }}" class="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-primary hover:shadow-lg transition-all">
-                            Go to Home
+                        <a href="{{ route('landing') }}" class="text-slate-500 font-bold hover:text-primary transition-all">
+                            Back to Home
                         </a>
                     </div>
 
@@ -250,43 +263,81 @@
     </main>
 
     <script>
-        lucide.createIcons();
+    lucide.createIcons();
 
-        function registrationWizard() {
-            return {
-                step: 1,
-                plan: 'full',
-                paymentMethod: 'gcash',
-                formData: { name: '', email: '' },
-                
-                get progressWidth() {
-                    return ((this.step - 1) / 3) * 100;
-                },
+    function registrationWizard() {
+        return {
+            step: 1,
+            plan: 'full',
+            formData: { 
+                name: '', 
+                email: '', 
+                phone: '',
+                refNumber: '' 
+            },
+            
+            get progressWidth() {
+                return ((this.step - 1) / 3) * 100; 
+            },
 
-                nextStep() {
-                    if (this.step === 1) {
-                        // Skip to Success if Free Trial
-                        if (this.plan === 'free') {
-                            this.step = 4;
-                        } else {
-                            this.step = 2;
-                        }
-                    } else if (this.step === 2) {
-                        // Move to QR Wall
-                        this.step = 3;
-                        
-                        // SIMULATE POLLING
-                        // In real life, you use setInterval to check /api/check-payment/{id}
-                        setTimeout(() => {
-                            // Pretend user scanned and paid
-                            this.step = 4;
-                            // Re-init icons for the new step
-                            this.$nextTick(() => lucide.createIcons());
-                        }, 5000); // Wait 5 seconds
+            nextStep() {
+                if (this.step === 1) {
+                    // Simple frontend validation
+                    if(!this.formData.name || !this.formData.email || !this.formData.phone) {
+                        alert("Please fill in all fields.");
+                        return;
                     }
+                    this.step = (this.plan === 'free') ? 3 : 2;
+                } 
+                else if (this.step === 2) {
+                    this.step = 3;
+                } 
+                else if (this.step === 3) {
+                    // --- SEND DATA TO LARAVEL HERE ---
+                    const btn = document.activeElement;
+                    const originalText = btn.innerText;
+                    btn.innerHTML = `<i data-lucide='loader-2' class='animate-spin w-5 h-5 inline'></i> Processing...`;
+                    lucide.createIcons();
+
+                    // Prepare payload
+                    let payload = {
+                        name: this.formData.name,
+                        email: this.formData.email,
+                        phone: this.formData.phone,
+                        plan_type: this.plan,
+                        payment_reference: this.formData.refNumber
+                    };
+
+                    fetch("{{ route('register.store') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}" // Essential for security
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(async response => {
+                        const data = await response.json();
+                        if (response.ok) {
+                            // Success! Move to Step 4
+                            this.step = 4;
+                            this.$nextTick(() => lucide.createIcons());
+                        } else {
+                            // Validation Error (e.g. Email taken)
+                            alert(data.message || "Please check your inputs.");
+                            btn.innerText = originalText;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert("System error. Please try again.");
+                        btn.innerText = originalText;
+                    });
                 }
             }
         }
-    </script>
+    }
+</script>
 </body>
 </html>
