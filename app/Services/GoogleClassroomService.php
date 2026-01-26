@@ -13,6 +13,11 @@ class GoogleClassroomService
     protected $client;
     protected $service;
 
+    public function getClient()
+    {
+        return $this->client;
+    }
+
     public function __construct()
     {
         $this->client = new Client();

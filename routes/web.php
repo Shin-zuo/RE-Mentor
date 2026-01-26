@@ -10,6 +10,7 @@ use App\Services\GoogleClassroomService;
 use Illuminate\Http\Request;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,4 +71,30 @@ Route::get('/google/callback', function (Request $request) {
     $google->authenticate($request->get('code'));
     
     return 'Success! Google Classroom is now connected. You can close this tab.';
+});
+
+
+
+
+Route::get('/debug-classroom', function () {
+    try {
+        $google = new GoogleClassroomService();
+        $fullId = env('GOOGLE_CLASSROOM_FULL_ID');
+
+        echo "<h1>Debug Info</h1>";
+        echo "<strong>Target ID from .env:</strong> " . $fullId . "<br><br>";
+
+        // FIX: Use getClient() instead of ->client
+        $service = new Google_Service_Classroom($google->getClient());
+        $courses = $service->courses->listCourses()->getCourses();
+
+        echo "<strong>Available Courses:</strong><ul>";
+        foreach ($courses as $course) {
+            echo "<li><strong>" . $course->name . "</strong> (ID: " . $course->id . ")</li>";
+        }
+        echo "</ul>";
+
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
 });

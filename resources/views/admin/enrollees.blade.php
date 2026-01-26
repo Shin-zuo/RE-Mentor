@@ -2,13 +2,15 @@
 
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h1 class="font-serif font-bold text-3xl text-slate-900 dark:text-white"></h1>
-            <button class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
-                Export CSV
-            </button>
-            <button class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-95 transition-colors shadow-lg shadow-primary/20">
-                + Add Student
-            </button>
+            <h1 class="font-serif font-bold text-3xl text-slate-900 dark:text-white">Enrollees</h1>
+            <div class="flex gap-2 mt-2">
+                <button class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+                    Export CSV
+                </button>
+                <button class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-95 transition-colors shadow-lg shadow-primary/20">
+                    + Add Student
+                </button>
+            </div>
         </div>
         <div class="flex gap-2">
             <form method="GET" action="{{ route('enrollees') }}" class="relative" x-data>
@@ -99,9 +101,13 @@
                             <td class="p-6 text-right">
                                 <div class="flex items-center justify-end gap-2">
                                     @if($enrollee->status === 'pending')
+                                        {{-- 
+                                            NOTE: We don't need to send 'email' here anymore.
+                                            The controller finds the email using the ID in the route.
+                                        --}}
                                         <form action="{{ route('enrollees.approve', $enrollee->id) }}" method="POST">
                                             @csrf 
-                                            <button title="Approve" class="p-2 bg-green-50 rounded-lg text-green-600 hover:bg-green-100 transition-colors">
+                                            <button type="submit" title="Approve Student" class="p-2 bg-green-50 rounded-lg text-green-600 hover:bg-green-100 transition-colors transform active:scale-95">
                                                 <i data-lucide="check-circle" class="w-5 h-5"></i>
                                             </button>
                                         </form>
@@ -134,5 +140,51 @@
             {{$enrollees->links() }}
         </div>
     </div>
+
+    {{-- SWEETALERT LOGIC --}}
+    @if(session('success') || session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Action Successful',
+                    text: "{{ session('success') }}",
+                    confirmButtonColor: '#1e3a8a',
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+            @endif
+
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Action Failed',
+                    text: "{{ session('error') }}",
+                    confirmButtonColor: '#1e3a8a'
+                });
+            @endif
+        });
+    </script>
+    @endif
+
+    @if($errors->any())
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Validation Error',
+            html: `
+                <ul style="text-align: left;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            `,
+            confirmButtonColor: '#1e3a8a'
+        });
+    });
+</script>
+@endif
 
 </x-layouts.app>
