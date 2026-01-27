@@ -59,7 +59,6 @@ RE-Mentor is a robust web application designed to facilitate mentoring programs 
 </br>
 <img width="1920" height="954" alt="Screenshot (34)" src="https://github.com/user-attachments/assets/7d4df3cf-2459-43b9-888b-499c3a3a3044" />
 
-*Note: Screenshots will be added here. Please capture and upload images of key pages like the landing page, user dashboard, and admin panel.*
 
 ## Key Features
 
