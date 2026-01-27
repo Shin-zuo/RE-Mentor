@@ -8,17 +8,206 @@
 </p>
 
 
-RE-Mentor System 🎓📖 OverviewRE-Mentor is a specialized student enrollment and management system designed for Real Estate review centers. It streamlines the registration process, automates Google Classroom invitations, and provides a comprehensive dashboard for administrators to track enrollees and payments.This system solves the problem of manual student onboarding by integrating directly with the Google Classroom API, allowing for instant access to "Free Trial" students and managed approval for "Full Access" enrollees.✨ Key Features🚀 For StudentsSmart Registration Wizard: A multi-step, user-friendly form built with Alpine.js that guides students through the process.Dual Plan Support:Free Trial: Instant, automated access to trial materials (15 days).Full Access: Secure registration with payment reference verification.Automated Email Notifications: Students receive professional HTML emails confirming their application status via SMTP.Smart Upgrades: Existing Free Trial users can upgrade to Full Access seamlessly without duplicate data entry.🛡️ For AdministratorsInteractive Dashboard: Real-time statistics on total enrollees, pending approvals, and active students.Visual Analytics: Interactive charts powered by Chart.js showing enrollment trends over time.One-Click Approval: Instantly verify payments and invite students to the exclusive Google Classroom directly from the admin panel.Search & Filter: Easily find students by name, email, or status.Google Classroom Integration: Seamless OAuth2 connection to manage class rosters without leaving the app.📸 ScreenshotsRegistration PageAdmin DashboardClean, multi-step wizard with Alpine.jsAnalytics and Quick ActionsEnrollee ManagementEmail NotificationOne-click approval & searchProfessional confirmation emails🧩 Project Structure & Logic1. The Smart Registration Logic (RegisterController.php)The system intelligently handles user data to prevent duplicates while allowing legitimate upgrades. The logic flow includes:New User: Creates a record. If "Free Trial", automatically triggers the Google Classroom API.Existing "Free" User:Retrying Free Trial? ⛔ Blocked (Prevents abuse).Upgrading to Full? ✅ Allowed (Updates existing record to "Pending" & preserves history).Existing "Full" User: ⛔ Blocked (Already enrolled).2. Google Classroom Automation (GoogleClassroomService.php)Instead of manual invites, the system uses a custom service to communicate with Google:PHP// Example: Inviting a student automatically
-$google = new GoogleClassroomService();
-$courseId = env('GOOGLE_CLASSROOM_FREE_ID');
-$google->inviteStudent($email, $courseId);
-3. Admin Approval Workflow (EnrolleesController.php)Admins review "Full Access" applications. The approval process is fully automated:Admin clicks "Approve".System updates status to approved in MySQL.System connects to Google API and sends the official Classroom invite.Admin receives a visual confirmation via SweetAlert.🛠️ Tech StackBackend: Laravel 10 (PHP)Frontend: Blade Templates, Tailwind CSS, Alpine.jsDatabase: MySQLIntegrations:Google Classroom API: For automated student invites.Gmail SMTP: For transactional emails.SweetAlert2: For beautiful, responsive user alerts.Chart.js: For data visualization.🚀 Installation & SetupPrerequisitesPHP >= 8.1ComposerMySQLNode.js & NPMStep-by-Step GuideClone the RepositoryBashgit clone https://github.com/yourusername/re-mentor.git
-cd re-mentor
-Install DependenciesBashcomposer install
-npm install
-Environment ConfigurationCopy the example env file and configure your database and API keys:Bashcp .env.example .env
-php artisan key:generate
-Update your .env with:DB_DATABASE, DB_USERNAME, DB_PASSWORDGOOGLE_CLASSROOM_FREE_ID & GOOGLE_CLASSROOM_FULL_IDMAIL_USERNAME & MAIL_PASSWORD (App Password)Google API SetupPlace your client_secret.json in storage/app/.Visit /connect-google once to generate your token.Run Migrations & BuildBashphp artisan migrate
-npm run build
-Serve the AppBashphp artisan serve
-🤝 ContributingContributions, issues, and feature requests are welcome!Fork the ProjectCreate your Feature Branch (git checkout -b feature/AmazingFeature)Commit your Changes (git commit -m 'Add some AmazingFeature')Push to the Branch (git push origin feature/AmazingFeature)Open a Pull Request📝 LicenseDistributed under the MIT License. See LICENSE for more information.👤 Author[Your Name]GitHub: @yourusernameLinkedIn: Your Profile
+# RE-Mentor
+
+[![Laravel](https://img.shields.io/badge/Laravel-10.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.1+-blue.svg)](https://php.net)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A comprehensive mentoring platform built with Laravel that integrates seamlessly with Google Classroom to streamline student enrollment, course management, and administrative tasks.
+
+![RE-Mentor Banner](https://via.placeholder.com/800x200?text=RE-Mentor+Banner) <!-- Replace with actual banner image URL -->
+
+## Table of Contents
+
+- [Short Description](#short-description)
+- [Screenshots](#screenshots)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Code Snippets](#code-snippets)
+- [Contributing](#contributing)
+- [License](#license)
+- [Authors](#authors)
+
+## Short Description
+
+RE-Mentor is a robust web application designed to facilitate mentoring programs by automating enrollment processes and integrating with Google Classroom. It provides a user-friendly interface for students to register, mentors to manage courses, and administrators to oversee the entire system. Built with Laravel, it ensures scalability, security, and ease of maintenance.
+
+## Screenshots
+
+<!-- Add screenshots here. For example: -->
+<!-- ![Landing Page](screenshots/landing.png) -->
+<!-- ![Dashboard](screenshots/dashboard.png) -->
+<!-- ![Enrollment Form](screenshots/enrollment.png) -->
+
+*Note: Screenshots will be added here. Please capture and upload images of key pages like the landing page, user dashboard, and admin panel.*
+
+## Key Features
+
+- **User Authentication**: Secure login and registration system with role-based access.
+- **Enrollment Management**: Streamlined application process for students with approval workflow.
+- **Google Classroom Integration**: Automatic course creation and student invites via Google API.
+- **Admin Dashboard**: Comprehensive panel for managing users, enrollments, and system settings.
+- **Profile Management**: Users can update personal information and change passwords.
+- **Email Notifications**: Automated emails for application confirmations and updates.
+- **Responsive Design**: Mobile-friendly interface using modern CSS and JavaScript.
+
+## Tech Stack
+
+- **Backend**: Laravel 10.x (PHP Framework)
+- **Frontend**: Blade Templates, CSS, JavaScript (with Vite for asset compilation)
+- **Database**: MySQL (via Laravel's Eloquent ORM)
+- **Authentication**: Laravel Sanctum for API authentication
+- **External APIs**: Google Classroom API (via google/apiclient)
+- **Email**: Laravel Mail with configurable drivers
+- **Testing**: Pest PHP for unit and feature tests
+- **Deployment**: Compatible with standard Laravel deployment methods
+
+## Prerequisites
+
+Before installing RE-Mentor, ensure you have the following installed on your system:
+
+- PHP >= 8.1
+- Composer (PHP dependency manager)
+- Node.js >= 14.x and npm (for frontend assets)
+- MySQL or another supported database
+- Git (for cloning the repository)
+
+## Installation
+
+Follow these steps to set up RE-Mentor locally:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/re-mentor.git
+   cd re-mentor
+   ```
+
+2. **Install PHP dependencies:**
+   ```bash
+   composer install
+   ```
+
+3. **Install Node.js dependencies:**
+   ```bash
+   npm install
+   ```
+
+4. **Environment setup:**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+5. **Database setup:**
+   ```bash
+   # Create a MySQL database and update .env with database credentials
+   php artisan migrate
+   php artisan db:seed  # If seeders are available
+   ```
+
+6. **Build assets:**
+   ```bash
+   npm run build
+   # Or for development: npm run dev
+   ```
+
+7. **Start the application:**
+   ```bash
+   php artisan serve
+   ```
+
+   Visit `http://localhost:8000` in your browser.
+
+## Configuration
+
+### Environment Variables
+
+Configure the following critical environment variables in your `.env` file:
+
+- **Database Configuration:**
+  ```
+  DB_CONNECTION=mysql
+  DB_HOST=127.0.0.1
+  DB_PORT=3306
+  DB_DATABASE=re_mentor
+  DB_USERNAME=your_db_username
+  DB_PASSWORD=your_db_password
+  ```
+
+- **Google Classroom Integration:**
+  ```
+  GOOGLE_CLIENT_ID=your_google_client_id
+  GOOGLE_CLIENT_SECRET=your_google_client_secret
+  GOOGLE_REDIRECT_URI=http://localhost:8000/google/callback
+  GOOGLE_CLASSROOM_FULL_ID=your_classroom_course_id
+  ```
+
+  *Note: Obtain these from the Google Cloud Console. Ensure the Classroom API is enabled.*
+
+- **Mail Configuration:**
+  ```
+  MAIL_MAILER=smtp
+  MAIL_HOST=your_smtp_host
+  MAIL_PORT=587
+  MAIL_USERNAME=your_email_username
+  MAIL_PASSWORD=your_email_password
+  MAIL_ENCRYPTION=tls
+  MAIL_FROM_ADDRESS=noreply@rementor.com
+  MAIL_FROM_NAME="RE-Mentor"
+  ```
+
+- **Application URL:**
+  ```
+  APP_URL=http://localhost:8000
+  ```
+
+## Usage
+
+1. **Access the Application:** Navigate to the application URL in your browser.
+
+2. **User Registration:** New users can register via the `/register` route.
+
+3. **Login:** Existing users log in via the `/login` route.
+
+4. **Dashboard:** After login, users are redirected to their personalized dashboard.
+
+5. **Enrollment:** Students can submit enrollment applications, which admins can approve via the `/enrollees` route.
+
+6. **Google Classroom Sync:** Admins can connect Google Classroom accounts and automate course invites.
+
+7. **Profile Management:** Users can update their profiles via the `/profile` route.
+
+*Default Admin Account (if seeded):* `admin@example.com` / `password`
+
+## Code Snippets
+
+<!-- Add your project snippets here -->
+
+*Note: This section is reserved for highlighting interesting code snippets from your project. For example, you could add snippets showing the Google Classroom integration logic, enrollment approval workflow, or custom middleware.*
+
+## Contributing
+
+We welcome contributions to RE-Mentor! To contribute:
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Open a Pull Request.
+
+Please ensure your code follows Laravel coding standards and includes appropriate tests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Authors
+
+- **Your Name** - *Initial work* - [Your GitHub](https://github.com/your-username) | [LinkedIn](https://linkedin.com/in/your-profile)
+
+*Replace placeholders with actual information as needed.*
