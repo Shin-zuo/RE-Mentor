@@ -39,6 +39,16 @@
             <span>Enrollees</span>
         </a>
 
+        <div class="pt-4 pb-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider dark:text-slate-600">
+            Settings
+        </div>
+
+        <a href="{{ route('profile') }}" 
+           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('profile') ? 'bg-accent text-primary font-bold shadow-lg shadow-accent/20' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
+            <i data-lucide="user" class="w-5 h-5 {{ request()->routeIs('profile') ? 'text-primary' : 'text-slate-400 group-hover:text-white' }}"></i>
+            <span>Profile</span>
+        </a>
+
         
     </nav>
 

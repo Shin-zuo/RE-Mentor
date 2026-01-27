@@ -2,14 +2,14 @@
 
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h1 class="font-serif font-bold text-3xl text-slate-900 dark:text-white">Enrollees</h1>
+            {{-- <h1 class="font-serif font-bold text-3xl text-slate-900 dark:text-white">Enrollees</h1> --}}
             <div class="flex gap-2 mt-2">
-                <button class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+                {{-- <button class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
                     Export CSV
                 </button>
                 <button class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-95 transition-colors shadow-lg shadow-primary/20">
                     + Add Student
-                </button>
+                </button> --}}
             </div>
         </div>
         <div class="flex gap-2">
@@ -60,7 +60,7 @@
 
                             <td class="p-6">
                                 @if($enrollee->plan_type === 'full')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/10 text-accent-foreground border border-accent/20">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/50 text-accent-foreground border border-accent/20">
                                         <i data-lucide="crown" class="w-3 h-3"></i> Full Access
                                     </span>
                                 @else

@@ -35,7 +35,7 @@
 </head>
 <body class="font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
 
-    <div class="min-h-screen flex flex-col md:flex-row">
+    <div class="h-screen flex flex-col md:flex-row overflow-hidden">
         
         @include('components.layouts.sidebar')
 
@@ -54,5 +54,6 @@
     <script>
         lucide.createIcons();
     </script>
+    @stack('scripts')
 </body>
 </html>

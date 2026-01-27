@@ -27,9 +27,17 @@
                 <div class="text-sm font-bold text-slate-900 dark:text-white">{{auth()->user()->name}}</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400">Administrator</div>
             </div>
-            <div class="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center font-serif font-bold ring-4 ring-slate-50 dark:ring-slate-900 shadow-md">
-                A
-            </div>
+                <div class="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center font-serif font-bold ring-4 ring-slate-50 dark:ring-slate-900 shadow-md">
+                    @if(auth()->user()->avatar)
+    <img src="{{ asset('storage/' . auth()->user()->avatar) }}" 
+         alt="{{ auth()->user()->name }}" 
+         class="h-10 w-10 rounded-full object-cover border border-slate-200">
+@else
+    <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold border border-blue-700">
+        {{ substr(auth()->user()->name, 0, 1) }}
+    </div>
+@endif
+                </div>
         </div>
     </div>
 </header>

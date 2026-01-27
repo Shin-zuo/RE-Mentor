@@ -1,13 +1,14 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Services\GoogleClassroomService;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrolleesController;
-use App\Services\GoogleClassroomService;
-use Illuminate\Http\Request;
 
 
 
@@ -57,6 +58,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/enrollees', [EnrolleesController::class, 'index'])->name('enrollees');
     Route::post('/enrollees/{id}/approve', [EnrolleesController::class, 'approve'])->name('enrollees.approve');
 
+   // ... existing code ...
+
+// Profile Routes
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+
+// 1. Change this from post to patch to match the form
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+// 2. Add this new route for passwords
+Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 });
 
 
