@@ -7,60 +7,18 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+RE-Mentor System 🎓📖 OverviewRE-Mentor is a specialized student enrollment and management system designed for Real Estate review centers. It streamlines the registration process, automates Google Classroom invitations, and provides a comprehensive dashboard for administrators to track enrollees and payments.This system solves the problem of manual student onboarding by integrating directly with the Google Classroom API, allowing for instant access to "Free Trial" students and managed approval for "Full Access" enrollees.✨ Key Features🚀 For StudentsSmart Registration Wizard: A multi-step, user-friendly form built with Alpine.js that guides students through the process.Dual Plan Support:Free Trial: Instant, automated access to trial materials (15 days).Full Access: Secure registration with payment reference verification.Automated Email Notifications: Students receive professional HTML emails confirming their application status via SMTP.Smart Upgrades: Existing Free Trial users can upgrade to Full Access seamlessly without duplicate data entry.🛡️ For AdministratorsInteractive Dashboard: Real-time statistics on total enrollees, pending approvals, and active students.Visual Analytics: Interactive charts powered by Chart.js showing enrollment trends over time.One-Click Approval: Instantly verify payments and invite students to the exclusive Google Classroom directly from the admin panel.Search & Filter: Easily find students by name, email, or status.Google Classroom Integration: Seamless OAuth2 connection to manage class rosters without leaving the app.📸 ScreenshotsRegistration PageAdmin DashboardClean, multi-step wizard with Alpine.jsAnalytics and Quick ActionsEnrollee ManagementEmail NotificationOne-click approval & searchProfessional confirmation emails🧩 Project Structure & Logic1. The Smart Registration Logic (RegisterController.php)The system intelligently handles user data to prevent duplicates while allowing legitimate upgrades. The logic flow includes:New User: Creates a record. If "Free Trial", automatically triggers the Google Classroom API.Existing "Free" User:Retrying Free Trial? ⛔ Blocked (Prevents abuse).Upgrading to Full? ✅ Allowed (Updates existing record to "Pending" & preserves history).Existing "Full" User: ⛔ Blocked (Already enrolled).2. Google Classroom Automation (GoogleClassroomService.php)Instead of manual invites, the system uses a custom service to communicate with Google:PHP// Example: Inviting a student automatically
+$google = new GoogleClassroomService();
+$courseId = env('GOOGLE_CLASSROOM_FREE_ID');
+$google->inviteStudent($email, $courseId);
+3. Admin Approval Workflow (EnrolleesController.php)Admins review "Full Access" applications. The approval process is fully automated:Admin clicks "Approve".System updates status to approved in MySQL.System connects to Google API and sends the official Classroom invite.Admin receives a visual confirmation via SweetAlert.🛠️ Tech StackBackend: Laravel 10 (PHP)Frontend: Blade Templates, Tailwind CSS, Alpine.jsDatabase: MySQLIntegrations:Google Classroom API: For automated student invites.Gmail SMTP: For transactional emails.SweetAlert2: For beautiful, responsive user alerts.Chart.js: For data visualization.🚀 Installation & SetupPrerequisitesPHP >= 8.1ComposerMySQLNode.js & NPMStep-by-Step GuideClone the RepositoryBashgit clone https://github.com/yourusername/re-mentor.git
+cd re-mentor
+Install DependenciesBashcomposer install
+npm install
+Environment ConfigurationCopy the example env file and configure your database and API keys:Bashcp .env.example .env
+php artisan key:generate
+Update your .env with:DB_DATABASE, DB_USERNAME, DB_PASSWORDGOOGLE_CLASSROOM_FREE_ID & GOOGLE_CLASSROOM_FULL_IDMAIL_USERNAME & MAIL_PASSWORD (App Password)Google API SetupPlace your client_secret.json in storage/app/.Visit /connect-google once to generate your token.Run Migrations & BuildBashphp artisan migrate
+npm run build
+Serve the AppBashphp artisan serve
+🤝 ContributingContributions, issues, and feature requests are welcome!Fork the ProjectCreate your Feature Branch (git checkout -b feature/AmazingFeature)Commit your Changes (git commit -m 'Add some AmazingFeature')Push to the Branch (git push origin feature/AmazingFeature)Open a Pull Request📝 LicenseDistributed under the MIT License. See LICENSE for more information.👤 Author[Your Name]GitHub: @yourusernameLinkedIn: Your Profile
