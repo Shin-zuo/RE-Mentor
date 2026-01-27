@@ -44,6 +44,21 @@ RE-Mentor is a robust web application designed to facilitate mentoring programs 
 <!-- ![Dashboard](screenshots/dashboard.png) -->
 <!-- ![Enrollment Form](screenshots/enrollment.png) -->
 
+<img width="1900" height="931" alt="Screenshot (30)" src="https://github.com/user-attachments/assets/3f82ff2b-4c3b-4029-a975-d5328f1786cc" />
+</br>
+</br>
+<img width="1920" height="946" alt="Screenshot (31)" src="https://github.com/user-attachments/assets/14734f72-dd32-43e8-8b03-6b0192f8eadd" />
+</br>
+</br>
+
+<img width="1899" height="923" alt="Screenshot (32)" src="https://github.com/user-attachments/assets/77bf5afe-c8c5-4595-b1cc-49465c85e24f" />
+</br>
+</br>
+<img width="1920" height="934" alt="Screenshot (33)" src="https://github.com/user-attachments/assets/c9f18e17-7f16-4e8b-9b25-dbf3b28e65e6" />
+</br>
+</br>
+<img width="1920" height="954" alt="Screenshot (34)" src="https://github.com/user-attachments/assets/7d4df3cf-2459-43b9-888b-499c3a3a3044" />
+
 *Note: Screenshots will be added here. Please capture and upload images of key pages like the landing page, user dashboard, and admin panel.*
 
 ## Key Features
