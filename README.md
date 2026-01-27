@@ -202,12 +202,9 @@ We welcome contributions to RE-Mentor! To contribute:
 
 Please ensure your code follows Laravel coding standards and includes appropriate tests.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Authors
 
-- **Your Name** - *Initial work* - [Your GitHub](https://github.com/your-username) | [LinkedIn](https://linkedin.com/in/your-profile)
+- **Shinzuo** - *Junior Web Developer* - [Your GitHub](https://github.com/Shin-zuo) | [LinkedIn](https://linkedin.com/in/your-profile)
 
 *Replace placeholders with actual information as needed.*
