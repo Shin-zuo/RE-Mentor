@@ -205,6 +205,6 @@ Please ensure your code follows Laravel coding standards and includes appropriat
 
 ## Authors
 
-- **Shinzuo** - *Junior Web Developer* - [Your GitHub](https://github.com/Shin-zuo) | [LinkedIn](https://linkedin.com/in/your-profile)
+- **Shinzuo** - *Junior Web Developer* - [GitHub](https://github.com/Shin-zuo) | [LinkedIn](https://linkedin.com/in/your-profile)
 
 *Replace placeholders with actual information as needed.*
